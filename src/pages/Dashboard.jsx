@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Posts from "../components/Posts";
 import PostDetails from "../components/PostDetails";
+import axios from "axios";
+import AddPost from "../components/AddPost";
 
 const Dashboard = () => {
-  const data = [
-    { id: 111, title: "Happiness", author: "John" },
-    { id: 112, title: "MIU", author: "Dean" },
-    { id: 113, title: "Enjoy Life", author: "Jasmine" },
-  ];
+  const url = "http://localhost:8080/v1/api/posts";
+
   const [postTitle, setPostTitle] = useState("");
-  const [postData, setPostData] = useState(data);
+  const [postData, setPostData] = useState([]);
   const [currentPost, setCurrentPost] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [flat, setFlat] = useState(false);
 
   const handleTitleUpdate = (event) => {
     setPostTitle(event.target.value);
@@ -28,11 +29,40 @@ const Dashboard = () => {
   const handleEdit = (id) => {
     console.log("edit is clicked");
   };
-  const handleDelete = (id) => {
-    console.log("delete is clicked");
+  const handleDelete = async (id) => {
+    await deletePost(id);
   };
+  const fetchPostData = async () => {
+    try {
+      let postData = await axios.get(url);
+      let data = postData.data;
+      setPostData(data);
+      setIsLoading(false);
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+  const deletePost = async (id) => {
+    const deletePost = await axios.delete(`${url}/${id}`);
+    if (deletePost.status === 200) {
+      setCurrentPost(undefined);
+      setFlat(true);
+    }
+  };
+  useEffect(() => {
+    fetchPostData();
+  }, [flat]);
+
+  if (isLoading) {
+    return (
+      <main className={{ display: "flex" }}>
+        <p className={{ textAlignment: "center" }}>Loading...</p>
+      </main>
+    );
+  }
   return (
     <main>
+      <AddPost onSuccessRefresh={setFlat} />
       <Posts posts={postData} handleSelect={handleSelect} />
       <div className="main">
         <input type="text" name="postTitle" onChange={handleTitleUpdate} />
