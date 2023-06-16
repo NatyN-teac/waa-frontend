@@ -3,7 +3,7 @@ import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { CurrentContext } from "../globalContext";
 
-const Post = ({ id, title, author, handleSelect }) => {
+const Post = ({ id, title, author}) => {
   const { currentPost, setCurrentPost } = useContext(CurrentContext);
   return (
     <div className="single-post" onClick={() => setCurrentPost(id)}>
