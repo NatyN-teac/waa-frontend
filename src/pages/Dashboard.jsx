@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Posts from "../components/Posts";
 import PostDetails from "../components/PostDetails";
 import axios from "axios";
 import AddPost from "../components/AddPost";
+import { CurrentContext } from "../globalContext";
 
 const Dashboard = () => {
   const url = "http://localhost:8080/v1/api/posts";
 
   const [postTitle, setPostTitle] = useState("");
   const [postData, setPostData] = useState([]);
-  const [currentPost, setCurrentPost] = useState();
+  const {currentPost, setCurrentPost} = useContext(CurrentContext);
   const [isLoading, setIsLoading] = useState(true);
   const [flat, setFlat] = useState(false);
 
@@ -63,7 +64,7 @@ const Dashboard = () => {
   return (
     <main>
       <AddPost onSuccessRefresh={setFlat} />
-      <Posts posts={postData} handleSelect={handleSelect} />
+      <Posts posts={postData}/>
       <div className="main">
         <input type="text" name="postTitle" onChange={handleTitleUpdate} />
         <button type="submit" className="btn" onClick={handleUpdateBtn}>

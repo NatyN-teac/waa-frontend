@@ -1,7 +1,8 @@
 import React from "react";
 import Post from "./Post";
 
-const Posts = ({ posts,handleSelect }) => {
+const Posts = ({ posts}) => {
+   
   return (
     <div className="posts">
       {posts.map((post) => {
@@ -11,7 +12,6 @@ const Posts = ({ posts,handleSelect }) => {
             id={post.id}
             title={post.title}
             author={post.author}
-            handleSelect={handleSelect}
           />
         );
       })}
